@@ -32,11 +32,16 @@ def get_text_chunks(text):
     return chunks
 
 
+
 def get_vectorstore(text_chunks):
-    # embeddings = OpenAIEmbeddings()
-    embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
-    vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
-    return vectorstore
+    try:
+        # embeddings = OpenAIEmbeddings()
+        embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
+        vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
+        return vectorstore
+    except Exception as e:
+        st.write(f"Error initializing embeddings: {str(e)}")
+        return None  # Return None or handle the error as needed
 
 
 def get_conversation_chain(vectorstore):
