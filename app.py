@@ -2,15 +2,13 @@ import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.embeddings import HuggingFaceInstructEmbeddings
+from langchain.embeddings import OpenAIEmbeddings, HuggingFaceInstructEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from htmlTemplates import css, bot_template, user_template
 from langchain.llms import HuggingFaceHub
-
 
 def get_pdf_text(pdf_docs):
     text = ""
@@ -32,16 +30,11 @@ def get_text_chunks(text):
     return chunks
 
 
-
 def get_vectorstore(text_chunks):
-    try:
-        # embeddings = OpenAIEmbeddings()
-        embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
-        vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
-        return vectorstore
-    except Exception as e:
-        st.write(f"Error initializing embeddings: {str(e)}")
-        return None  # Return None or handle the error as needed
+    #embeddings = OpenAIEmbeddings()
+    embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
+    vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
+    return vectorstore
 
 
 def get_conversation_chain(vectorstore):
